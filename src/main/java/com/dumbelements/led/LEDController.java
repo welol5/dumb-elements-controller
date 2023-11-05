@@ -2,22 +2,25 @@ package com.dumbelements.led;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import javax.servlet.http.HttpSession;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import com.dumbelements.beans.BulkLEDStatus;
 
 @RestController
 @RequestMapping(path="/led")
+@CrossOrigin
 public class LEDController {
 
     @Autowired private LEDWorker worker;
     
     @RequestMapping(method=POST)
     public ResponseEntity<Void> updateLEDColors(@RequestBody BulkLEDStatus status){
+
+        System.out.println("enterted");
 
         worker.updateLEDColors(status);
 

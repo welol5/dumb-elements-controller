@@ -12,6 +12,7 @@ import java.time.Duration;
 
 import org.springframework.stereotype.Service;
 
+import com.dumbelements.Enviornment;
 import com.dumbelements.beans.BulkLEDStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,7 +29,7 @@ public class LEDWorker {
                     .build();
             ObjectMapper mapper = new ObjectMapper();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://192.168.1.7/"))
+                    .uri(URI.create("http://" + Enviornment.getVariable("arduino.ip")))
                     .POST(BodyPublishers.ofString(mapper.writeValueAsString(ledStatus)))
                     .build();
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
