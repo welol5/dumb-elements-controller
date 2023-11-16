@@ -11,6 +11,7 @@ public class DumbElementsControllerApplication {
 	public static void main(String[] args) {
 		try{
 			Enviornment.loadEnviornmentVariables();
+			Enviornment.createMicrocontrollers();
 		} catch (FileNotFoundException e){
 			e.printStackTrace();
 			//Cannot continue without knowledge of devices

@@ -1,41 +1,22 @@
 package com.dumbelements.beans;
 
+import java.util.Arrays;
+
 public class BulkLEDStatus {
 
-    private int ledStart;
-    private int ledEnd;
-    private int r;
-    private int g;
-    private int b;
+    private LEDStatus[] status;
 
-    public int getLedStart() {
-        return ledStart;
+    public LEDStatus[] getStatus() {
+        return status;
     }
-    public void setLedStart(int ledStart) {
-        this.ledStart = ledStart;
+
+    public void setStatus(LEDStatus[] status) {
+        this.status = status;
     }
-    public int getLedEnd() {
-        return ledEnd;
+
+    @Override
+    public String toString() {
+        return "BulkLEDStatus [status=" + Arrays.toString(status) + "]";
     }
-    public void setLedEnd(int ledEnd) {
-        this.ledEnd = ledEnd;
-    }
-    public int getR() {
-        return r;
-    }
-    public void setR(int r) {
-        this.r = r;
-    }
-    public int getG() {
-        return g;
-    }
-    public void setG(int g) {
-        this.g = g;
-    }
-    public int getB() {
-        return b;
-    }
-    public void setB(int b) {
-        this.b = b;
-    }
+
 }

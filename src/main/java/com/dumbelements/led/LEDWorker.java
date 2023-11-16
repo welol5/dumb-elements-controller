@@ -14,13 +14,14 @@ import org.springframework.stereotype.Service;
 
 import com.dumbelements.Enviornment;
 import com.dumbelements.beans.BulkLEDStatus;
+import com.dumbelements.microcontroller.Microcontroller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class LEDWorker {
 
-    public boolean updateLEDColors(BulkLEDStatus ledStatus) {
+    public boolean updateLEDColors(BulkLEDStatus ledStatus, Microcontroller microcontroller) {
 
         try {
             HttpClient client = HttpClient.newBuilder()
@@ -29,8 +30,8 @@ public class LEDWorker {
                     .build();
             ObjectMapper mapper = new ObjectMapper();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://" + Enviornment.getVariable("arduino.ip")))
-                    .POST(BodyPublishers.ofString(mapper.writeValueAsString(ledStatus)))
+                    .uri(URI.create(microcontroller.getControllerURL()))
+                    .POST(BodyPublishers.ofString(microcontroller.formatMessageBody(ledStatus)))
                     .build();
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
@@ -48,4 +49,6 @@ public class LEDWorker {
             return false;
         }
     }
+
+    
 }

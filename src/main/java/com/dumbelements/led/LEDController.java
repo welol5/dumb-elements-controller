@@ -8,7 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-import com.dumbelements.beans.BulkLEDStatus;
+import com.dumbelements.Enviornment;
+import com.dumbelements.beans.LEDUpdateRequest;
 
 @RestController
 @RequestMapping(path="/led")
@@ -18,12 +19,13 @@ public class LEDController {
     @Autowired private LEDWorker worker;
     
     @RequestMapping(method=POST)
-    public ResponseEntity<Void> updateLEDColors(@RequestBody BulkLEDStatus status){
-
-        System.out.println("enterted");
-
-        worker.updateLEDColors(status);
-
+    public ResponseEntity<Void> updateLEDColors(@RequestBody LEDUpdateRequest updateRequest){
+        try{
+            System.out.println(updateRequest.toString());
+            worker.updateLEDColors(updateRequest.getLedsToUpdate(), Enviornment.getMicrocontrollers()[0]);
+        } catch (NullPointerException e){
+            return ResponseEntity.internalServerError().build();
+        }
         return ResponseEntity.ok().build();
     }
 }
