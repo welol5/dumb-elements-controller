@@ -22,7 +22,10 @@ public class LEDController {
     public ResponseEntity<Void> updateLEDColors(@RequestBody LEDUpdateRequest updateRequest){
         try{
             System.out.println(updateRequest.toString());
-            worker.updateLEDColors(updateRequest.getLedsToUpdate(), Enviornment.getMicrocontrollers()[0]);
+            boolean success = worker.updateLEDColors(updateRequest.getLedsToUpdate(), Enviornment.getMicrocontrollers()[0]);
+            if(!success){
+                return ResponseEntity.badRequest().build();
+            }
         } catch (NullPointerException e){
             return ResponseEntity.internalServerError().build();
         }
