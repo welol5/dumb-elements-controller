@@ -1,5 +1,7 @@
 package com.dumbelements.microcontroller;
 
+import java.net.http.HttpRequest.BodyPublisher;
+
 import com.dumbelements.beans.BulkLEDStatus;
 
 public abstract class Microcontroller {
@@ -45,5 +47,5 @@ public abstract class Microcontroller {
         return builder.toString();
     }
 
-    public abstract String formatMessageBody(BulkLEDStatus status);
+    public abstract BodyPublisher formatMessageBody(BulkLEDStatus status);
 }
