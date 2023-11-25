@@ -6,7 +6,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpClient.Version;
-import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import com.dumbelements.beans.BulkLEDStatus;
 import com.dumbelements.microcontroller.Microcontroller;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class LEDWorker {
@@ -27,7 +25,6 @@ public class LEDWorker {
                     .version(Version.HTTP_1_1)
                     .connectTimeout(Duration.ofSeconds(30))
                     .build();
-            ObjectMapper mapper = new ObjectMapper();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL()))
                     .POST(microcontroller.formatMessageBody(ledStatus))
