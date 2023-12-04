@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class RaspberryPi extends Microcontroller{
 
-    protected RaspberryPi(String ip, String port) {
+    public RaspberryPi(String ip, String port) {
         super(ip, port);
         
     }

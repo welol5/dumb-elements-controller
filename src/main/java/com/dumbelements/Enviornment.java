@@ -11,6 +11,7 @@ import java.util.Map;
 
 import com.dumbelements.microcontroller.ESP32;
 import com.dumbelements.microcontroller.Microcontroller;
+import com.dumbelements.microcontroller.RaspberryPi;
 
 /**
  * This is a crude implementation of a class to deal with all of the constants. The constants
@@ -58,11 +59,29 @@ public class Enviornment {
 
     public static void createMicrocontrollers() {
         ArrayList<Microcontroller> microList = new ArrayList<Microcontroller>();
+        String ip = null;
         for (Map.Entry<String, String> entry : variables.entrySet()) {
             if (entry.getKey().startsWith("microcontroller")) {
                 if (entry.getKey().startsWith("microcontroller.esp32")) {
                     if (entry.getKey().equals("microcontroller.esp32.ip")) {
                         microList.add(new ESP32(entry.getValue()));
+                    }
+                } else if(entry.getKey().startsWith("microcontroller.raspberrypi")){
+                    if(entry.getKey().startsWith("microcontroller.raspberrypi.ip")){
+                        if(ip == null){
+                            ip = entry.getValue();
+                        } else {
+                            throw new IllegalArgumentException("Raspberry Pi ip found before the port of the previous");
+                        }
+                    }
+
+                    if(entry.getKey().startsWith("microcontroller.raspberrypi.port")){
+                        if(ip == null){
+                            throw new IllegalArgumentException("Port does not have matching ip address");
+                        } else {
+                            microList.add(new RaspberryPi(ip, entry.getValue()));
+                            ip = null;
+                        }
                     }
                 }
             }
