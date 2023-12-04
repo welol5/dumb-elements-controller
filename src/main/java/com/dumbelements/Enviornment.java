@@ -45,6 +45,9 @@ public class Enviornment {
                 if (line == null) {
                     reader.close();
                     break;
+                } else if(line.charAt(0) == '#'){
+                    //ignore comments
+                    continue;
                 }
                 variables.put(line.split("=")[0], line.split("=")[1]);
             } catch (IOException e) {
