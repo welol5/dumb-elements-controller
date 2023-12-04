@@ -59,28 +59,21 @@ public class Enviornment {
 
     public static void createMicrocontrollers() {
         ArrayList<Microcontroller> microList = new ArrayList<Microcontroller>();
-        String ip = null;
+        Map<String, String> controllerIpaAnPorts = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : variables.entrySet()) {
-            if (entry.getKey().startsWith("microcontroller")) {
-                if (entry.getKey().startsWith("microcontroller.esp32")) {
-                    if (entry.getKey().equals("microcontroller.esp32.ip")) {
+            if (entry.getKey().matches("microcontroller\\..*")) {
+                if (entry.getKey().matches("microcontroller\\.esp32\\..*")) {
+                    if (entry.getKey().matches("microcontroller\\.esp32\\.[0-9]+\\.ip")) {
                         microList.add(new ESP32(entry.getValue()));
                     }
-                } else if(entry.getKey().startsWith("microcontroller.raspberrypi")){
-                    if(entry.getKey().startsWith("microcontroller.raspberrypi.ip")){
-                        if(ip == null){
-                            ip = entry.getValue();
-                        } else {
-                            throw new IllegalArgumentException("Raspberry Pi ip found before the port of the previous");
-                        }
-                    }
-
-                    if(entry.getKey().startsWith("microcontroller.raspberrypi.port")){
-                        if(ip == null){
-                            throw new IllegalArgumentException("Port does not have matching ip address");
-                        } else {
-                            microList.add(new RaspberryPi(ip, entry.getValue()));
-                            ip = null;
+                } else if(entry.getKey().matches("microcontroller\\.raspberrypi\\..*")){
+                    System.out.println(entry.getValue());
+                    if(entry.getKey().matches("microcontroller\\.raspberrypi\\.[0-9]+\\.(ip|port)")){
+                        if(controllerIpaAnPorts.get(entry.getKey().substring(0, entry.getKey().lastIndexOf("."))) == null){
+                            controllerIpaAnPorts.put(entry.getKey().substring(0, entry.getKey().lastIndexOf(".")), entry.getValue());
+                        } else if(entry.getKey().matches("microcontroller\\.raspberrypi\\.[0-9]+\\.ip")){
+                            microList.add(new RaspberryPi(entry.getValue(), controllerIpaAnPorts.get(entry.getKey().substring(0, entry.getKey().lastIndexOf(".")))));
+                            controllerIpaAnPorts.remove(controllerIpaAnPorts.get(entry.getKey().substring(0, entry.getKey().lastIndexOf("."))));
                         }
                     }
                 }
