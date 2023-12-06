@@ -2,11 +2,11 @@ package com.dumbelements.beans;
 
 public class LEDStatus {
     
-    private int ledStart;
-    private int ledEnd;
-    private int r;
-    private int g;
-    private int b;
+    private int ledStart = 0;
+    private int ledEnd = 0;
+    private int r = 0;
+    private int g = 0;
+    private int b = 0;
 
     public int getLedStart() {
         return ledStart;
