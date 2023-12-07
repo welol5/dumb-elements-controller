@@ -70,4 +70,30 @@ public class LEDWorker {
         }
         return false;
     }
+
+    public boolean off(Microcontroller microcontroller){
+        System.out.println("sending off command");
+        try {
+            HttpClient client = HttpClient.newBuilder()
+                    .version(Version.HTTP_1_1)
+                    .connectTimeout(Duration.ofSeconds(30))
+                    .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(microcontroller.getControllerURL() + "/led/off"))
+                    .POST(BodyPublishers.noBody())
+                    .build();
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+
+            if(response.statusCode() == 200){
+                return true;
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

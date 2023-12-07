@@ -1,4 +1,3 @@
 #microcontroller.esp32.0.ip=192.168.1.129
-microcontroller.raspberrypi.0.ip=localhost
-microcontroller.raspberrypi.0.port=8080
-#192.168.1.128
+microcontroller.raspberrypi.0.ip=192.168.1.128
+microcontroller.raspberrypi.0.port=8081

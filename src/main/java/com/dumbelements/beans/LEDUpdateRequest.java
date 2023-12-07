@@ -3,6 +3,7 @@ package com.dumbelements.beans;
 public class LEDUpdateRequest {
     private String name;
     private BulkLEDStatus ledsToUpdate;
+    private LEDAnimation ledAnimation;
 
     public String getName() {
         return name;
@@ -16,10 +17,16 @@ public class LEDUpdateRequest {
     public void setLedsToUpdate(BulkLEDStatus ledsToUpdate) {
         this.ledsToUpdate = ledsToUpdate;
     }
+    public LEDAnimation getLedAnimation() {
+        return ledAnimation;
+    }
+    public void setLedAnimation(LEDAnimation ledAnimation) {
+        this.ledAnimation = ledAnimation;
+    }
     
     @Override
     public String toString() {
-        return "LEDUpdateRequest [name=" + name + ", ledsToUpdate=" + ledsToUpdate + "]";
+        return "LEDUpdateRequest [name=" + name + ", ledsToUpdate=" + ledsToUpdate + ", ledAnimation=" + ledAnimation
+                + "]";
     }
-    
 }
