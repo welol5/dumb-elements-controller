@@ -20,6 +20,8 @@ import com.dumbelements.microcontroller.ESP32;
 import com.dumbelements.microcontroller.Microcontroller;
 import com.dumbelements.microcontroller.RaspberryPi;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.MapType;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 
 /**
  * This is a crude implementation of a class to deal with all of the constants. The constants
@@ -109,7 +111,8 @@ public class Enviornment {
             try {
                 HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
                 if(response.statusCode() == 200){
-                    setups.put(i, mapper.readValue(response.body(), HashMap.class));
+                    MapType typeRef = TypeFactory.defaultInstance().constructMapType(HashMap.class, String.class, String.class);
+                    setups.put(i, mapper.readValue(response.body(), typeRef));
                 }
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();

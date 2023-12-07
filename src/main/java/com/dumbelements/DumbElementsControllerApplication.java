@@ -3,7 +3,6 @@ package com.dumbelements;
 import java.io.FileNotFoundException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -17,8 +16,22 @@ import com.dumbelements.agents.NightAgent;
 public class DumbElementsControllerApplication {
 
 	public static void main(String[] args) {
+		String enviornmentFilePath = null;
+
+		if(args.length > 0){
+			for(int i = 0; i < args.length; i++){
+				if(args[i].equals("-e") && i+1 < args.length){
+					enviornmentFilePath = args[i+1];
+				}
+			}
+		}
+
 		try{
-			Enviornment.loadEnviornmentVariables();
+			if(enviornmentFilePath != null){
+				Enviornment.loadEnviornmentVariables(enviornmentFilePath);
+			} else {
+				Enviornment.loadEnviornmentVariables();
+			}
 			Enviornment.createMicrocontrollers();
 		} catch (FileNotFoundException e){
 			e.printStackTrace();
