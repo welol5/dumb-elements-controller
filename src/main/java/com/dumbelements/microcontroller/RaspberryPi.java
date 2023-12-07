@@ -4,6 +4,7 @@ import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 
 import com.dumbelements.beans.BulkLEDStatus;
+import com.dumbelements.beans.LEDAnimation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -16,6 +17,17 @@ public class RaspberryPi extends Microcontroller{
 
     @Override
     public BodyPublisher formatMessageBody(BulkLEDStatus status) {
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            return BodyPublishers.ofString(mapper.writeValueAsString(status));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public BodyPublisher formatMessageBody(LEDAnimation status) {
         ObjectMapper mapper = new ObjectMapper();
         try {
             return BodyPublishers.ofString(mapper.writeValueAsString(status));

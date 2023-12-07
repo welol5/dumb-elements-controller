@@ -4,6 +4,7 @@ import java.net.http.HttpRequest.BodyPublisher;
 import java.net.http.HttpRequest.BodyPublishers;
 
 import com.dumbelements.beans.BulkLEDStatus;
+import com.dumbelements.beans.LEDAnimation;
 import com.dumbelements.beans.LEDStatus;
 
 public class ESP32 extends Microcontroller{
@@ -28,6 +29,11 @@ public class ESP32 extends Microcontroller{
             bytes[(i*COMMAND_LENGTH)+6] = (byte)statusArray[i].getB();
         }
         return BodyPublishers.ofByteArray(bytes);
+    }
+
+    @Override
+    public BodyPublisher formatMessageBody(LEDAnimation status) {
+        throw new UnsupportedOperationException("Unimplemented method 'formatMessageBody'");
     }
     
 }

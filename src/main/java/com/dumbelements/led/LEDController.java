@@ -35,7 +35,7 @@ public class LEDController {
 
     @RequestMapping(method=POST, path="/animation")
     public ResponseEntity<Void> playLEDAnimation(@RequestBody LEDAnimation animationRequest){
-        Boolean success = worker.runNamedAnimation(Enviornment.getMicrocontrollers()[0], animationRequest.getNamedAnimation());
+        Boolean success = worker.runNamedAnimation(Enviornment.getMicrocontrollers()[0], animationRequest);
         if(success){
             return ResponseEntity.ok().build();
         } else {

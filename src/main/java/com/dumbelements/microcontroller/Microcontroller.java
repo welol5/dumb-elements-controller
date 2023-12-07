@@ -3,6 +3,7 @@ package com.dumbelements.microcontroller;
 import java.net.http.HttpRequest.BodyPublisher;
 
 import com.dumbelements.beans.BulkLEDStatus;
+import com.dumbelements.beans.LEDAnimation;
 
 public abstract class Microcontroller {
 
@@ -48,4 +49,5 @@ public abstract class Microcontroller {
     }
 
     public abstract BodyPublisher formatMessageBody(BulkLEDStatus status);
+    public abstract BodyPublisher formatMessageBody(LEDAnimation status);
 }

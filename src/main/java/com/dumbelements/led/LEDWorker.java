@@ -13,6 +13,7 @@ import java.time.Duration;
 import org.springframework.stereotype.Service;
 
 import com.dumbelements.beans.BulkLEDStatus;
+import com.dumbelements.beans.LEDAnimation;
 import com.dumbelements.microcontroller.Microcontroller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -45,7 +46,7 @@ public class LEDWorker {
         return false;
     }
 
-    public boolean runNamedAnimation(Microcontroller microcontroller, String animationName) {
+    public boolean runNamedAnimation(Microcontroller microcontroller, LEDAnimation ledAnimation) {
 
         try {
             HttpClient client = HttpClient.newBuilder()
@@ -53,8 +54,8 @@ public class LEDWorker {
                     .connectTimeout(Duration.ofSeconds(30))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(microcontroller.getControllerURL() + "/led/namedanimation"))
-                    .POST(BodyPublishers.ofString(animationName))
+                    .uri(URI.create(microcontroller.getControllerURL() + "/led/animation"))
+                    .POST(microcontroller.formatMessageBody(ledAnimation))
                     .build();
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
