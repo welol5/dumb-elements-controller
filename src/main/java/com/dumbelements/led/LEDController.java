@@ -1,5 +1,7 @@
 package com.dumbelements.led;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -8,21 +10,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.dumbelements.Enviornment;
 import com.dumbelements.beans.LEDAnimation;
 import com.dumbelements.beans.LEDUpdateRequest;
+
 
 @RestController
 @RequestMapping(path="/led")
 @CrossOrigin
 public class LEDController {
 
+    private Logger logger = LogManager.getLogger(LEDController.class);
+
     @Autowired private LEDWorker worker;
     
     @RequestMapping(method=POST)
-    public ResponseEntity<Void> updateLEDColors(@RequestBody LEDUpdateRequest updateRequest){
+    public ResponseEntity<Void> updateLEDColors(HttpServletRequest request, @RequestBody LEDUpdateRequest updateRequest){
+        logger.info("LED update request from: " + request.getRemoteAddr());
         try{
-            System.out.println(updateRequest.toString());
+            logger.info(updateRequest.toString());
             boolean success = worker.updateLEDColors(Enviornment.getMicrocontrollers()[0], updateRequest.getLedsToUpdate());
             if(!success){
                 return ResponseEntity.badRequest().build();

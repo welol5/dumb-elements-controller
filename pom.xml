@@ -14,8 +14,9 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>dumb-elements-controller</name>
 	<description>A Spring based backend server for automating and controlling other dumbelements</description>
+	<packaging>war</packaging>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 	</properties>
 	<dependencies>
 		<!-- <dependency>
