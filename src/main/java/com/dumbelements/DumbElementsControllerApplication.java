@@ -1,5 +1,6 @@
 package com.dumbelements;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
@@ -11,23 +12,44 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import com.dumbelements.agents.NightAgent;
 
 @SpringBootApplication
-public class DumbElementsControllerApplication {
+public class DumbElementsControllerApplication extends SpringBootServletInitializer {
 
 	private static Logger logger = LogManager.getLogger(DumbElementsControllerApplication.class);
 
 	public static void main(String[] args) {
+		loadEnviornment(args);
+		SpringApplication.run(DumbElementsControllerApplication.class, args);
+	}
+
+	private static void setupAgents(){
+		logger.info("Starting agents");
+		LocalTime lightsOutTime = LocalTime.of(23, 0, 0); 
+		//assumes that this is not being launched beteen 11 and midnight
+		long offset = LocalTime.now().until(lightsOutTime, ChronoUnit.SECONDS);
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+		scheduler.scheduleAtFixedRate(new NightAgent(), offset, (long)(24*60*60), TimeUnit.SECONDS);
+		logger.info("Agents started");
+	}
+
+	private static void loadEnviornment(String[] args){
+		System.out.println("loading enviornment");
 		String enviornmentFilePath = null;
 
-		if(args.length > 0){
+		if(args != null && args.length > 0){
 			for(int i = 0; i < args.length; i++){
 				if(args[i].equals("-e") && i+1 < args.length){
 					enviornmentFilePath = args[i+1];
 				}
 			}
+		} else if(args == null){
+			enviornmentFilePath = System.getProperty("enviornmentPath");
+			logger.info("Enviornment configuration file path: " + new File(enviornmentFilePath).getAbsolutePath());
 		}
 
 		try{
@@ -47,21 +69,13 @@ public class DumbElementsControllerApplication {
 			//Cannot continue without knowledge of devices
 			return;
 		}
-
 		setupAgents();
-
-		//run webserver
-		SpringApplication.run(DumbElementsControllerApplication.class, args);
 	}
 
-	private static void setupAgents(){
-		logger.info("Starting agents");
-		LocalTime lightsOutTime = LocalTime.of(23, 0, 0); 
-		//assumes that this is not being launched beteen 11 and midnight
-		long offset = LocalTime.now().until(lightsOutTime, ChronoUnit.SECONDS);
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(new NightAgent(), offset, (long)(24*60*60), TimeUnit.SECONDS);
-		logger.info("Agents started");
-	}
+	@Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		loadEnviornment(null);
+        return application.sources(DumbElementsControllerApplication.class);
+    }
 
 }
