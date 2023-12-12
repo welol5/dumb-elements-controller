@@ -8,8 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -20,7 +20,7 @@ import com.dumbelements.agents.NightAgent;
 @SpringBootApplication
 public class DumbElementsControllerApplication extends SpringBootServletInitializer {
 
-	private static Logger logger = LogManager.getLogger(DumbElementsControllerApplication.class);
+	private static Logger logger = LoggerFactory.getLogger(DumbElementsControllerApplication.class);
 
 	public static void main(String[] args) {
 		loadEnviornment(args);
