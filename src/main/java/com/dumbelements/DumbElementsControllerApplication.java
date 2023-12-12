@@ -49,6 +49,7 @@ public class DumbElementsControllerApplication extends SpringBootServletInitiali
 			}
 		} else if(args == null){
 			enviornmentFilePath = System.getProperty("enviornmentPath");
+			logger.info("Entered file path: " + enviornmentFilePath);
 			logger.info("Enviornment configuration file path: " + new File(enviornmentFilePath).getAbsolutePath());
 		}
 
