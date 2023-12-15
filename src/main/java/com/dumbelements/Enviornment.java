@@ -57,6 +57,9 @@ public class Enviornment {
                 if (line == null) {
                     reader.close();
                     break;
+                } else if (line.length() == 0) {
+                    //ignore empty lines
+                    continue;
                 } else if(line.charAt(0) == '#'){
                     //ignore comments
                     continue;
