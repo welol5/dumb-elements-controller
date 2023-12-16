@@ -56,6 +56,10 @@ public class SunsetAgent extends Agent implements Runnable {
         logger.info("Agent finished tasks, scheduling next run");
         try{
             long offset = getTimeUntilNextSunset();
+            if(offset == -1){
+                logger.info("Location not set, sunset time cannot be reterived. The agent will not be started. If this was not intentional add \"locationcoords\" to your enviornment");
+                return;
+            }
             scheduler.schedule(this, offset, TimeUnit.SECONDS);
             logger.info("Next run scheduled in " + offset + " seconds");
         } catch (IOException | InterruptedException e){
@@ -65,6 +69,9 @@ public class SunsetAgent extends Agent implements Runnable {
 
     private long getTimeUntilNextSunset() throws IOException, InterruptedException{
         String location = Enviornment.getVariable("locationcoords");
+        if(location == null){
+            return -1;
+        }
         LocalDate tomorrow = LocalDate.now().plusDays(1);
         String dateString = "date=" + tomorrow.getYear() + "-" + tomorrow.getMonthValue() + "-" + tomorrow.getDayOfMonth();
 
