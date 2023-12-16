@@ -46,10 +46,10 @@ public class Enviornment {
 
     public Enviornment() throws FileNotFoundException {
         logger.info("initializing enviornemnt");
-        logger.info("Found properties: ");
-        for(Map.Entry o:  System.getProperties().entrySet()){
-            logger.info(o.getKey() + " : " + o.getValue());
-        }
+        // logger.info("Found properties: ");
+        // for(Map.Entry o:  System.getProperties().entrySet()){
+        //     logger.info(o.getKey() + " : " + o.getValue());
+        // }
         loadEnviornmentVariables();
     }
 
