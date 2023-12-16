@@ -73,7 +73,15 @@
 			<groupId>org.shredzone.commons</groupId>
 			<artifactId>commons-suncalc</artifactId>
 			<version>3.7</version>
-		  </dependency>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.json/json -->
+		<dependency>
+    		<groupId>org.json</groupId>
+    		<artifactId>json</artifactId>
+    		<version>20231013</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
