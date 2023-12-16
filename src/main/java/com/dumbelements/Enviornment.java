@@ -46,6 +46,10 @@ public class Enviornment {
 
     public Enviornment() throws FileNotFoundException {
         logger.info("initializing enviornemnt");
+        logger.info("Found properties: ");
+        for(Map.Entry o:  System.getProperties().entrySet()){
+            logger.info(o.getKey() + " : " + o.getValue());
+        }
         loadEnviornmentVariables();
     }
 
@@ -80,9 +84,6 @@ public class Enviornment {
 
     public File getEnviornmentFile() throws FileNotFoundException{
         String commandLineFilePath = System.getProperty("enviornmentPath");
-        for(Map.Entry o:  System.getProperties().entrySet()){
-            System.out.println(o.getKey() + " : " + o.getValue());
-        }
         if(commandLineFilePath == null){
             throw new FileNotFoundException("Enviornment must be specified");
         } else {
