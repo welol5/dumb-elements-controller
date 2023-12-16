@@ -11,7 +11,10 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
@@ -45,6 +48,9 @@ public class SunsetAgent extends Agent implements Runnable {
         logger.info("Starting agent");
         try{
             long offset = getTimeUntilNextSunset();
+            if(offset > (24*60*60)){
+                offset = getTimeUntilSunset(ZonedDateTime.now());
+            }
             scheduler.schedule(this, offset, TimeUnit.SECONDS);
             logger.info("Agent scheduled to run in " + offset + " seconds");
         } catch (IOException | InterruptedException e){
@@ -75,20 +81,22 @@ public class SunsetAgent extends Agent implements Runnable {
         }
     }
 
-    private long getTimeUntilNextSunset() throws IOException, InterruptedException{
+    private long getTimeUntilSunset(ZonedDateTime date) throws IOException, InterruptedException{
+        //check location
         String location = env.getVariable("locationcoords");
         if(location == null){
             return -1;
         }
-        LocalDate tomorrow = LocalDate.now().plusDays(1);
-        String dateString = "date=" + tomorrow.getYear() + "-" + tomorrow.getMonthValue() + "-" + tomorrow.getDayOfMonth();
+
+        String dateString = "date=" + date.getYear() + "-" + date.getMonthValue() + "-" + date.getDayOfMonth();
+        int tz = date.getOffset().getTotalSeconds()/(60*60);
 
         HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
                     .connectTimeout(Duration.ofSeconds(30))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(astronomyAPIURL + dateString + "&coords=" + location))
+                    .uri(URI.create(astronomyAPIURL + dateString + "&coords=" + location + "&tz=" + tz))
                     .GET()
                     .build();
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
@@ -105,9 +113,14 @@ public class SunsetAgent extends Agent implements Runnable {
             }
         }
 
-        LocalDateTime tomorrowSunset = LocalDateTime.of(tomorrow, sunsetTime);
+        ZonedDateTime sunset = ZonedDateTime.of(date.toLocalDate(), sunsetTime, ZonedDateTime.now().getZone());
 		//assumes that this is not being launched beteen 11 and midnight
-		return LocalDateTime.now().until(tomorrowSunset, ChronoUnit.SECONDS);
+		return LocalDateTime.now().until(sunset, ChronoUnit.SECONDS);
+    }
+
+    private long getTimeUntilNextSunset() throws IOException, InterruptedException{
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
+        return getTimeUntilSunset(tomorrow);
     }
     
 }
