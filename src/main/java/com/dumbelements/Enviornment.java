@@ -16,6 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+
 import com.dumbelements.microcontroller.ESP32;
 import com.dumbelements.microcontroller.Microcontroller;
 import com.dumbelements.microcontroller.RaspberryPi;
@@ -30,24 +34,27 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
  * This class will be updated to better interact with constants as it becomes nessicary,
  * however, some of the implementation is being added early.
  */
+@Component()
 public class Enviornment {
 
-    private static Map<String, String> variables = new HashMap<String, String>();
-    private static String defaultFilePath = "src/main/resources/enviornment.txt";
+    private static Logger logger = LoggerFactory.getLogger(Enviornment.class);
 
-    private static Microcontroller[] microcontrollers;
-    private static final Map<Integer, Map<String,String>> setups = new HashMap<Integer, Map<String,String>>();
+    private Map<String, String> variables = new HashMap<String, String>();
 
-    public static Microcontroller[] getMicrocontrollers() {
+    private Microcontroller[] microcontrollers;
+    private final Map<Integer, Map<String,String>> setups = new HashMap<Integer, Map<String,String>>();
+
+    public Enviornment() throws FileNotFoundException {
+        logger.info("initializing enviornemnt");
+        loadEnviornmentVariables();
+    }
+
+    public Microcontroller[] getMicrocontrollers() {
         return microcontrollers;
     }
 
-    public static void loadEnviornmentVariables() throws FileNotFoundException {
-        loadEnviornmentVariables(defaultFilePath);
-    }
-
-    public static void loadEnviornmentVariables(String filePath) throws FileNotFoundException {
-        File enviornmentVariablesFile = new File(filePath);
+    public void loadEnviornmentVariables() throws FileNotFoundException {
+        File enviornmentVariablesFile = getEnviornmentFile();
         BufferedReader reader = new BufferedReader(new FileReader(enviornmentVariablesFile));
 
         String line;
@@ -71,7 +78,21 @@ public class Enviornment {
         }
     }
 
-    public static void createMicrocontrollers() {
+    public File getEnviornmentFile() throws FileNotFoundException{
+        String commandLineFilePath = System.getProperty("enviornmentPath");
+        if(commandLineFilePath == null){
+            throw new FileNotFoundException("Enviornment must be specified");
+        } else {
+            File enviormentFile = new File(commandLineFilePath);
+            if(enviormentFile.exists()){
+                return enviormentFile;
+            } else {
+                throw new FileNotFoundException("The specified file does not exist: " + enviormentFile.getAbsolutePath());
+            }
+        }
+    }
+
+    public void createMicrocontrollers() {
         ArrayList<Microcontroller> microList = new ArrayList<Microcontroller>();
         Map<String, String> controllerIpaAnPorts = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : variables.entrySet()) {
@@ -99,8 +120,8 @@ public class Enviornment {
         queryMicrocontrollerSetups();
     }
 
-    public static void queryMicrocontrollerSetups(){
-        Microcontroller[] micros = Enviornment.getMicrocontrollers();
+    public void queryMicrocontrollerSetups(){
+        Microcontroller[] micros = getMicrocontrollers();
         ObjectMapper mapper = new ObjectMapper();
         for(int i = 0; i < micros.length; i++){
             HttpClient client = HttpClient.newBuilder()
@@ -123,12 +144,13 @@ public class Enviornment {
         }
     }
 
-    public static Map<String, String> getMicrocontrollerSetup(int id){
+    public Map<String, String> getMicrocontrollerSetup(int id){
         return setups.get(id);
     }
 
-    public static String getVariable(String key) {
+    public String getVariable(String key) {
         return variables.get(key);
     }
 
+    //TODO add methods that automatically convert variables to correct types
 }

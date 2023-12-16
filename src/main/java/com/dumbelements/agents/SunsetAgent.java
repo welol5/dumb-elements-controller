@@ -18,12 +18,15 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dumbelements.Enviornment;
 import com.dumbelements.beans.LEDAnimation;
 import com.dumbelements.led.LEDWorker;
 import com.dumbelements.microcontroller.Microcontroller;
+
+import jakarta.annotation.PostConstruct;
 
 @Component
 public class SunsetAgent extends Agent implements Runnable {
@@ -32,7 +35,13 @@ public class SunsetAgent extends Agent implements Runnable {
 
     private static final String astronomyAPIURL = "https://aa.usno.navy.mil/api/rstt/oneday?";
 
-    public SunsetAgent(){
+    @Autowired private Enviornment env;
+
+    public SunsetAgent(){     
+    }
+
+    @PostConstruct
+    public void init(){
         logger.info("Starting agent");
         try{
             long offset = getTimeUntilNextSunset();
@@ -41,14 +50,13 @@ public class SunsetAgent extends Agent implements Runnable {
         } catch (IOException | InterruptedException e){
             logger.error("Agent failed to start", e);
         }
-        
     }
 
     @Override
     public void run() {
         logger.info("Agent running");
         LEDWorker worker = new LEDWorker();
-        Microcontroller micro = Enviornment.getMicrocontrollers()[0];
+        Microcontroller micro = env.getMicrocontrollers()[0];
         LEDAnimation stars = new LEDAnimation();
         stars.setNamedAnimation("stars");
         worker.runNamedAnimation(micro, stars);
@@ -68,7 +76,7 @@ public class SunsetAgent extends Agent implements Runnable {
     }
 
     private long getTimeUntilNextSunset() throws IOException, InterruptedException{
-        String location = Enviornment.getVariable("locationcoords");
+        String location = env.getVariable("locationcoords");
         if(location == null){
             return -1;
         }

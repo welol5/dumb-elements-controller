@@ -17,13 +17,14 @@ import com.dumbelements.Enviornment;
 import com.dumbelements.beans.LEDAnimation;
 import com.dumbelements.beans.LEDUpdateRequest;
 
-
 @RestController
 @RequestMapping(path="/led")
 @CrossOrigin
 public class LEDController {
 
     private Logger logger = LoggerFactory.getLogger(LEDController.class);
+
+    @Autowired private Enviornment env;
 
     @Autowired private LEDWorker worker;
     
@@ -32,7 +33,7 @@ public class LEDController {
         logger.info("LED update request from: " + request.getRemoteAddr());
         try{
             logger.info(updateRequest.toString());
-            boolean success = worker.updateLEDColors(Enviornment.getMicrocontrollers()[0], updateRequest.getLedsToUpdate());
+            boolean success = worker.updateLEDColors(env.getMicrocontrollers()[0], updateRequest.getLedsToUpdate());
             if(!success){
                 return ResponseEntity.badRequest().build();
             }
@@ -44,7 +45,7 @@ public class LEDController {
 
     @RequestMapping(method=POST, path="/animation")
     public ResponseEntity<Void> playLEDAnimation(@RequestBody LEDAnimation animationRequest){
-        Boolean success = worker.runNamedAnimation(Enviornment.getMicrocontrollers()[0], animationRequest);
+        Boolean success = worker.runNamedAnimation(env.getMicrocontrollers()[0], animationRequest);
         if(success){
             return ResponseEntity.ok().build();
         } else {

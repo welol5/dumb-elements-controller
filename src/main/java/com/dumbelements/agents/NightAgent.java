@@ -8,18 +8,28 @@ import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.dumbelements.Enviornment;
 import com.dumbelements.led.LEDWorker;
 import com.dumbelements.microcontroller.Microcontroller;
 
+import jakarta.annotation.PostConstruct;
+
 @Component
 public class NightAgent extends Agent implements Runnable{
 
     private static Logger logger = LoggerFactory.getLogger(NightAgent.class);
 
+    @Autowired private Enviornment env;
+
     public NightAgent(){
+        
+    }
+
+    @PostConstruct
+    public void init(){
         logger.info("Starting agent");
         long timeTillRun;
         LocalTime nightAgentRunTime = LocalTime.of(23, 0, 0);
@@ -36,7 +46,7 @@ public class NightAgent extends Agent implements Runnable{
     public void run() {
         logger.info("Agent running");
         LEDWorker worker = new LEDWorker();
-        Microcontroller micro = Enviornment.getMicrocontrollers()[0];
+        Microcontroller micro = env.getMicrocontrollers()[0];
         worker.off(micro);
         logger.info("Agent finished tasks");
     }
