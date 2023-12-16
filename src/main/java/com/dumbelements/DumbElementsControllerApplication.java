@@ -2,11 +2,6 @@ package com.dumbelements;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
-import com.dumbelements.agents.NightAgent;
 
 @SpringBootApplication
 public class DumbElementsControllerApplication extends SpringBootServletInitializer {
