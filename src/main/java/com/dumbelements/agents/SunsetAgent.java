@@ -12,18 +12,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.dumbelements.DumbElementsControllerApplication;
 import com.dumbelements.Enviornment;
 import com.dumbelements.beans.LEDAnimation;
 import com.dumbelements.led.LEDWorker;
@@ -32,33 +28,38 @@ import com.dumbelements.microcontroller.Microcontroller;
 @Component
 public class SunsetAgent extends Agent implements Runnable {
 
-    private static Logger logger = LoggerFactory.getLogger(DumbElementsControllerApplication.class);
+    private static Logger logger = LoggerFactory.getLogger(SunsetAgent.class);
 
     private static final String astronomyAPIURL = "https://aa.usno.navy.mil/api/rstt/oneday?";
 
     public SunsetAgent(){
+        logger.info("Starting agent");
         try{
             long offset = getTimeUntilNextSunset();
             scheduler.schedule(this, offset, TimeUnit.SECONDS);
+            logger.info("Agent scheduled to run in " + offset + " seconds");
         } catch (IOException | InterruptedException e){
-            //TODO add exception handleing
+            logger.error("Agent failed to start", e);
         }
-        logger.info("agent started");
+        
     }
 
     @Override
     public void run() {
+        logger.info("Agent running");
         LEDWorker worker = new LEDWorker();
         Microcontroller micro = Enviornment.getMicrocontrollers()[0];
         LEDAnimation stars = new LEDAnimation();
         stars.setNamedAnimation("stars");
         worker.runNamedAnimation(micro, stars);
 
+        logger.info("Agent finished tasks, scheduling next run");
         try{
             long offset = getTimeUntilNextSunset();
             scheduler.schedule(this, offset, TimeUnit.SECONDS);
+            logger.info("Next run scheduled in " + offset + " seconds");
         } catch (IOException | InterruptedException e){
-            //TODO add exception handleing
+            logger.error("Agent failed to schedule", e);
         }
     }
 
