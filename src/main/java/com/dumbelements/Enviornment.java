@@ -84,6 +84,7 @@ public class Enviornment {
 
     public File getEnviornmentFile() throws FileNotFoundException{
         String commandLineFilePath = System.getProperty("enviornmentPath");
+        logger.info("Path to enviornment file: " + commandLineFilePath);
         if(commandLineFilePath == null){
             throw new FileNotFoundException("Enviornment must be specified");
         } else {
