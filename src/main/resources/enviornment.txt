@@ -1,3 +1,6 @@
 #microcontroller.esp32.0.ip=192.168.1.129
 microcontroller.raspberrypi.0.ip=192.168.1.128
 microcontroller.raspberrypi.0.port=8081
+
+#Dallas
+locationcoords=32.79,-96.79
