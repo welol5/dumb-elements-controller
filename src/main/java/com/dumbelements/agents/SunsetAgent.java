@@ -30,13 +30,11 @@ import com.dumbelements.led.LEDWorker;
 import com.dumbelements.microcontroller.Microcontroller;
 
 @Component
-public class SunsetAgent implements Runnable{
+public class SunsetAgent extends Agent implements Runnable {
 
     private static Logger logger = LoggerFactory.getLogger(DumbElementsControllerApplication.class);
 
     private static final String astronomyAPIURL = "https://aa.usno.navy.mil/api/rstt/oneday?";
-
-    private static ScheduledExecutorService scheduler = new ScheduledThreadPoolExecutor(1);
 
     public SunsetAgent(){
         try{

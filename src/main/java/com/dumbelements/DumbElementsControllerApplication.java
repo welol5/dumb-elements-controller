@@ -27,16 +27,6 @@ public class DumbElementsControllerApplication extends SpringBootServletInitiali
 		SpringApplication.run(DumbElementsControllerApplication.class, args);
 	}
 
-	private static void setupAgents(){
-		logger.info("Starting agents");
-		LocalTime lightsOutTime = LocalTime.of(23, 0, 0); 
-		//assumes that this is not being launched beteen 11 and midnight
-		long offset = LocalTime.now().until(lightsOutTime, ChronoUnit.SECONDS);
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleAtFixedRate(new NightAgent(), offset, (long)(24*60*60), TimeUnit.SECONDS);
-		logger.info("Agents started");
-	}
-
 	private static void loadEnviornment(String[] args){
 		System.out.println("loading enviornment");
 		String enviornmentFilePath = null;
@@ -70,7 +60,6 @@ public class DumbElementsControllerApplication extends SpringBootServletInitiali
 			//Cannot continue without knowledge of devices
 			return;
 		}
-		setupAgents();
 	}
 
 	@Override
