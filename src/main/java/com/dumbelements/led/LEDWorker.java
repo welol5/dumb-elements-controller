@@ -10,6 +10,8 @@ import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.dumbelements.beans.BulkLEDStatus;
@@ -19,6 +21,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 @Service
 public class LEDWorker {
+
+    private static Logger logger = LoggerFactory.getLogger(LEDWorker.class);
 
     public boolean updateLEDColors(Microcontroller microcontroller, BulkLEDStatus ledStatus) {
         try {
@@ -47,6 +51,7 @@ public class LEDWorker {
     }
 
     public boolean runNamedAnimation(Microcontroller microcontroller, LEDAnimation ledAnimation) {
+        logger.info("attempting to run animation: " + ledAnimation.getNamedAnimation());
 
         try {
             HttpClient client = HttpClient.newBuilder()
@@ -60,20 +65,22 @@ public class LEDWorker {
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
             if(response.statusCode() == 200){
+                logger.info("Successfully started animation");
                 return true;
             }
         } catch (IOException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Error running animation", e);
         } catch (InterruptedException e) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("Error running animation", e);
         }
+        logger.info("Failed to start animation");
         return false;
     }
 
     public boolean off(Microcontroller microcontroller){
-        System.out.println("sending off command");
+        logger.info("Turning off LEDs");
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
@@ -86,6 +93,7 @@ public class LEDWorker {
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
             if(response.statusCode() == 200){
+                logger.info("Successfully shut off LEDs");
                 return true;
             }
         } catch (IOException e) {
@@ -95,6 +103,7 @@ public class LEDWorker {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        logger.info("Failed to shut off LEDs");
         return false;
     }
 }

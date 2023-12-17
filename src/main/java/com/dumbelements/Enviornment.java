@@ -80,6 +80,8 @@ public class Enviornment {
                 e.printStackTrace();
             }
         }
+
+        createMicrocontrollers();
     }
 
     public File getEnviornmentFile() throws FileNotFoundException{

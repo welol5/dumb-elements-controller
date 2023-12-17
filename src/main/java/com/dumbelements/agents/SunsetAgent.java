@@ -8,13 +8,10 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.time.Duration;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import org.json.JSONArray;
@@ -39,6 +36,7 @@ public class SunsetAgent extends Agent implements Runnable {
     private static final String astronomyAPIURL = "https://aa.usno.navy.mil/api/rstt/oneday?";
 
     @Autowired private Enviornment env;
+    @Autowired private LEDWorker worker;
 
     public SunsetAgent(){     
     }
@@ -61,7 +59,6 @@ public class SunsetAgent extends Agent implements Runnable {
     @Override
     public void run() {
         logger.info("Agent running");
-        LEDWorker worker = new LEDWorker();
         Microcontroller micro = env.getMicrocontrollers()[0];
         LEDAnimation stars = new LEDAnimation();
         stars.setNamedAnimation("stars");
