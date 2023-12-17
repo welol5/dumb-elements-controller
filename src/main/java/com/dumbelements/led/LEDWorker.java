@@ -79,6 +79,36 @@ public class LEDWorker {
         return false;
     }
 
+    public boolean stopAnimation(Microcontroller microcontroller) {
+        logger.info("Stopping animation");
+        LEDAnimation ledAnimation = new LEDAnimation();
+        ledAnimation.setStopAnimation(true);
+        try {
+            HttpClient client = HttpClient.newBuilder()
+                    .version(Version.HTTP_1_1)
+                    .connectTimeout(Duration.ofSeconds(30))
+                    .build();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(microcontroller.getControllerURL() + "/led/animation"))
+                    .POST(microcontroller.formatMessageBody(ledAnimation))
+                    .build();
+            HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+
+            if(response.statusCode() == 200){
+                logger.info("Successfully stopped animation");
+                return true;
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            logger.error("Error stopping animation", e);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            logger.error("Error stopping animation", e);
+        }
+        logger.info("Failed to stop animation");
+        return false;
+    }
+
     public boolean off(Microcontroller microcontroller){
         logger.info("Turning off LEDs");
         try {

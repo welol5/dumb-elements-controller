@@ -47,7 +47,7 @@ public class NightAgent extends Agent implements Runnable{
         logger.info("Agent running");
         LEDWorker worker = new LEDWorker();
         Microcontroller micro = env.getMicrocontrollers()[0];
-        worker.off(micro);
+        worker.stopAnimation(micro);
         logger.info("Agent finished tasks");
     }
     
