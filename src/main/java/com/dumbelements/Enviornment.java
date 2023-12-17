@@ -46,10 +46,6 @@ public class Enviornment {
 
     public Enviornment() throws FileNotFoundException {
         logger.info("initializing enviornemnt");
-        // logger.info("Found properties: ");
-        // for(Map.Entry o:  System.getProperties().entrySet()){
-        //     logger.info(o.getKey() + " : " + o.getValue());
-        // }
         loadEnviornmentVariables();
     }
 
@@ -58,6 +54,7 @@ public class Enviornment {
     }
 
     public void loadEnviornmentVariables() throws FileNotFoundException {
+        logger.info("Loading enviornment variables");
         File enviornmentVariablesFile = getEnviornmentFile();
         BufferedReader reader = new BufferedReader(new FileReader(enviornmentVariablesFile));
 
@@ -76,6 +73,7 @@ public class Enviornment {
                     continue;
                 }
                 variables.put(line.split("=")[0], line.split("=")[1]);
+                logger.info("Variable created: " + line);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -100,6 +98,7 @@ public class Enviornment {
     }
 
     public void createMicrocontrollers() {
+        logger.info("Creating microcontroller array");
         ArrayList<Microcontroller> microList = new ArrayList<Microcontroller>();
         Map<String, String> controllerIpaAnPorts = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : variables.entrySet()) {
