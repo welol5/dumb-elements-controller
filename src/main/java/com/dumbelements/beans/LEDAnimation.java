@@ -3,7 +3,7 @@ package com.dumbelements.beans;
 public class LEDAnimation {
     
     private String namedAnimation;
-    private boolean stopAnimation;
+    private boolean stopAnimation = false;
 
     public String getNamedAnimation() {
         return namedAnimation;
