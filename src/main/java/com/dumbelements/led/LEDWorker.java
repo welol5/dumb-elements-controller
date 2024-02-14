@@ -12,8 +12,10 @@ import java.time.Duration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dumbelements.Enviornment;
 import com.dumbelements.beans.BulkLEDStatus;
 import com.dumbelements.beans.LEDAnimation;
 import com.dumbelements.microcontroller.Microcontroller;
@@ -24,11 +26,20 @@ public class LEDWorker {
 
     private static Logger logger = LoggerFactory.getLogger(LEDWorker.class);
 
+    private static int TIMEOUT;
+
+    @Autowired
+    private Enviornment enviornment;
+
+    public LEDWorker(){
+        TIMEOUT = Integer.valueOf(enviornment.getVariable("microcontroller.timeout"));
+    }
+
     public boolean updateLEDColors(Microcontroller microcontroller, BulkLEDStatus ledStatus) {
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(30))
+                    .connectTimeout(Duration.ofSeconds(TIMEOUT))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL() + "/led"))
@@ -56,7 +67,7 @@ public class LEDWorker {
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(30))
+                    .connectTimeout(Duration.ofSeconds(TIMEOUT))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL() + "/led/animation"))
@@ -86,7 +97,7 @@ public class LEDWorker {
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(30))
+                    .connectTimeout(Duration.ofSeconds(TIMEOUT))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL() + "/led/animation"))
@@ -114,7 +125,7 @@ public class LEDWorker {
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(30))
+                    .connectTimeout(Duration.ofSeconds(TIMEOUT))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL() + "/led/off"))

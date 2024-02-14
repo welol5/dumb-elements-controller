@@ -4,3 +4,5 @@ microcontroller.raspberrypi.0.port=8081
 
 #Dallas
 locationcoords=32.79,-96.79
+
+microcontroller.timeout=120
