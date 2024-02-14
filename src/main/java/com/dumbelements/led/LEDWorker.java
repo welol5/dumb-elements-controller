@@ -26,20 +26,13 @@ public class LEDWorker {
 
     private static Logger logger = LoggerFactory.getLogger(LEDWorker.class);
 
-    private static int TIMEOUT;
-
-    @Autowired
-    private Enviornment enviornment;
-
-    public LEDWorker(){
-        TIMEOUT = Integer.valueOf(enviornment.getVariable("microcontroller.timeout"));
-    }
+    @Autowired Enviornment env;
 
     public boolean updateLEDColors(Microcontroller microcontroller, BulkLEDStatus ledStatus) {
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(TIMEOUT))
+                    .connectTimeout(Duration.ofSeconds(Integer.valueOf(env.getVariable("microcontroller.timeout"))))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL() + "/led"))
@@ -67,7 +60,7 @@ public class LEDWorker {
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(TIMEOUT))
+                    .connectTimeout(Duration.ofSeconds(Integer.valueOf(env.getVariable("microcontroller.timeout"))))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL() + "/led/animation"))
@@ -97,7 +90,7 @@ public class LEDWorker {
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(TIMEOUT))
+                    .connectTimeout(Duration.ofSeconds(Integer.valueOf(env.getVariable("microcontroller.timeout"))))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL() + "/led/animation"))
@@ -125,7 +118,7 @@ public class LEDWorker {
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
-                    .connectTimeout(Duration.ofSeconds(TIMEOUT))
+                    .connectTimeout(Duration.ofSeconds(Integer.valueOf(env.getVariable("microcontroller.timeout"))))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(microcontroller.getControllerURL() + "/led/off"))
