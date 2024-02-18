@@ -39,7 +39,7 @@ public class NightAgent extends Agent implements Runnable{
             timeTillRun = LocalDateTime.now().until(LocalDateTime.of(LocalDate.now(), nightAgentRunTime), ChronoUnit.SECONDS);
         }
         scheduler.scheduleAtFixedRate(this, timeTillRun, 24*60*60, TimeUnit.SECONDS);
-        logger.info("Agent scheduled to run in " + timeTillRun + " seconds");
+        logger.info("Agent scheduled to run in " + timeTillRun + " seconds. " + LocalDateTime.now().plus(timeTillRun, ChronoUnit.SECONDS));
     }
 
     @Override

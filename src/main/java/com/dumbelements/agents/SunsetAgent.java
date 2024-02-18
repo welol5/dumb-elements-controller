@@ -50,7 +50,7 @@ public class SunsetAgent extends Agent implements Runnable {
                 offset = getTimeUntilSunset(ZonedDateTime.now());
             }
             scheduler.schedule(this, offset, TimeUnit.SECONDS);
-            logger.info("Agent scheduled to run in " + offset + " seconds");
+            logger.info("Agent scheduled to run in " + offset + " seconds. " + LocalDateTime.now().plus(offset, ChronoUnit.SECONDS));
         } catch (IOException | InterruptedException e){
             logger.error("Agent failed to start", e);
         }
@@ -73,7 +73,7 @@ public class SunsetAgent extends Agent implements Runnable {
                 return;
             }
             scheduler.schedule(this, offset, TimeUnit.SECONDS);
-            logger.info("Next run scheduled in " + offset + " seconds");
+            logger.info("Next run scheduled in " + offset + " seconds. " + LocalDateTime.now().plus(offset, ChronoUnit.SECONDS));
         } catch (IOException | InterruptedException e){
             logger.error("Agent failed to schedule", e);
         }

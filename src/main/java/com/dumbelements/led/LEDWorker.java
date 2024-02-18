@@ -101,12 +101,13 @@ public class LEDWorker {
             if(response.statusCode() == 200){
                 logger.info("Successfully stopped animation");
                 return true;
+            } else {
+                logger.info("Failed to stop animation. Response status code: " + response.statusCode());
+                return false;
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             logger.error("Error stopping animation", e);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             logger.error("Error stopping animation", e);
         }
         logger.info("Failed to stop animation");
