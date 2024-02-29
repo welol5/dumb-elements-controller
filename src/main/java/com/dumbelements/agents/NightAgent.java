@@ -23,6 +23,7 @@ public class NightAgent extends Agent implements Runnable{
     private static Logger logger = LoggerFactory.getLogger(NightAgent.class);
 
     @Autowired private Enviornment env;
+    @Autowired private LEDWorker worker;
 
     public NightAgent(){
         
@@ -45,7 +46,6 @@ public class NightAgent extends Agent implements Runnable{
     @Override
     public void run() {
         logger.info("Agent running");
-        LEDWorker worker = new LEDWorker();
         Microcontroller micro = env.getMicrocontrollers()[0];
         worker.stopAnimation(micro);
         logger.info("Agent finished tasks");
