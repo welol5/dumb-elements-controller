@@ -52,4 +52,14 @@ public class LEDController {
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @RequestMapping(method=POST, path="/off")
+    public ResponseEntity<Void> turnOffLEDs(){
+        Boolean success = worker.off(env.getMicrocontrollers()[0]);
+        if(success){
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

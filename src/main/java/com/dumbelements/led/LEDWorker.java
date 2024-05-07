@@ -85,16 +85,14 @@ public class LEDWorker {
 
     public boolean stopAnimation(Microcontroller microcontroller) {
         logger.info("Stopping animation");
-        LEDAnimation ledAnimation = new LEDAnimation();
-        ledAnimation.setStopAnimation(true);
         try {
             HttpClient client = HttpClient.newBuilder()
                     .version(Version.HTTP_1_1)
                     .connectTimeout(Duration.ofSeconds(Integer.valueOf(env.getVariable("microcontroller.timeout"))))
                     .build();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(microcontroller.getControllerURL() + "/led/animation"))
-                    .POST(microcontroller.formatMessageBody(ledAnimation))
+                    .uri(URI.create(microcontroller.getControllerURL() + "/led/off"))
+                    .POST(HttpRequest.BodyPublishers.noBody())
                     .build();
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
