@@ -31,20 +31,15 @@ public class LEDController {
     @RequestMapping(method=POST)
     public ResponseEntity<Void> updateLEDColors(HttpServletRequest request, @RequestBody LEDUpdateRequest updateRequest){
         logger.info("LED update request from: " + request.getRemoteAddr());
-        try{
-            logger.info(updateRequest.toString());
-            boolean success = worker.updateLEDColors(env.getMicrocontrollers()[0], updateRequest.getLedsToUpdate());
-            if(!success){
-                return ResponseEntity.badRequest().build();
-            }
-        } catch (NullPointerException e){
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.ok().build();
+        LEDAnimation ledUpdateRequest = new LEDAnimation();
+        ledUpdateRequest.setNamedAnimation("static");
+        ledUpdateRequest.setCommand(updateRequest.getLedsToUpdate().getStatus());
+        return playLEDAnimation(ledUpdateRequest);
     }
 
     @RequestMapping(method=POST, path="/animation")
     public ResponseEntity<Void> playLEDAnimation(@RequestBody LEDAnimation animationRequest){
+        System.out.println(animationRequest);
         Boolean success = worker.runNamedAnimation(env.getMicrocontrollers()[0], animationRequest);
         if(success){
             return ResponseEntity.ok().build();
