@@ -60,10 +60,10 @@ public class SunsetAgent extends Agent implements Runnable {
     public void run() {
         logger.info("Agent running");
         Microcontroller micro = env.getMicrocontrollers()[0];
-        LEDAnimation stars = new LEDAnimation();
-        stars.setNamedAnimation("stars");
-        logger.info("Sending: " + stars);
-        worker.runNamedAnimation(micro, stars);
+        LEDAnimation random = new LEDAnimation();
+        random.setNamedAnimation("random");
+        logger.info("Sending: " + random);
+        worker.runNamedAnimation(micro, random);
 
         logger.info("Agent finished tasks, scheduling next run");
         try{
