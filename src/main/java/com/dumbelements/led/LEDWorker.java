@@ -96,8 +96,8 @@ public class LEDWorker {
                     .build();
             HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 
-            if(response.statusCode() == 200){
-                logger.info("Successfully stopped animation");
+            if(response.statusCode() == 202){
+                logger.info("Successfully requsted animation to stop");
                 return true;
             } else {
                 logger.info("Failed to stop animation. Response status code: " + response.statusCode());
