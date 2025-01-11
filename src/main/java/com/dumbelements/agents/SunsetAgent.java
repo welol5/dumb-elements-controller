@@ -45,8 +45,10 @@ public class SunsetAgent extends Agent implements Runnable {
     public void init(){
         logger.info("Starting agent");
         try{
+            logger.info("Reteriving sunset time for tomorrow");
             long offset = getTimeUntilNextSunset();
             if(offset > (24*60*60)){
+                logger.info("Sunset is over 24h away. Reteriving sunset for today");
                 offset = getTimeUntilSunset(ZonedDateTime.now());
             }
             scheduler.schedule(this, offset, TimeUnit.SECONDS);
@@ -77,6 +79,11 @@ public class SunsetAgent extends Agent implements Runnable {
         } catch (IOException | InterruptedException e){
             logger.error("Agent failed to schedule", e);
         }
+    }
+
+    private long getTimeUntilNextSunset() throws IOException, InterruptedException{
+        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
+        return getTimeUntilSunset(tomorrow);
     }
 
     private long getTimeUntilSunset(ZonedDateTime date) throws IOException, InterruptedException{
@@ -115,10 +122,4 @@ public class SunsetAgent extends Agent implements Runnable {
 		//assumes that this is not being launched beteen 11 and midnight
 		return LocalDateTime.now().until(sunset, ChronoUnit.SECONDS);
     }
-
-    private long getTimeUntilNextSunset() throws IOException, InterruptedException{
-        ZonedDateTime tomorrow = ZonedDateTime.now().plusDays(1);
-        return getTimeUntilSunset(tomorrow);
-    }
-    
 }
